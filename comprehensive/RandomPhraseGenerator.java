@@ -9,6 +9,8 @@ public class RandomPhraseGenerator
     
     private boolean inDefinition;
     
+    private boolean inTerminal;
+    
     public static void main (String[] args)
     {
         // TODO Auto-generated method stub
