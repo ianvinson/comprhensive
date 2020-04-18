@@ -19,6 +19,7 @@ public class RandomPhraseGenerator {
 	public static void main(String[] args) throws FileNotFoundException {
 		iterations = Integer.parseInt(args[1]);
 		parseFile(args[0]);
+		sentenceCreator(iterations);
 	}
 
 	private static void parseFile(String filePath) throws FileNotFoundException {
@@ -61,13 +62,12 @@ public class RandomPhraseGenerator {
 						tag.append(curr.charAt(j));
 						i++;
 					}
-					tag.append(">");
+					tag.append(">"); //TODO Make sure that this increments to the correct spot
+					i++;
 					if (!nonTerminals.containsKey(tag.toString())) // Check if hashmap contains the tag
 					{
 						nonTerminals.put(tag.toString(), new NonTerminal(tag.toString()));
 					}
-
-					// TODO set reference to non Terminal
 					currentTerminal.setReferencedNonT(nonTerminals.get(tag.toString()));
 
 					created = new StringBuilder();
@@ -91,6 +91,12 @@ public class RandomPhraseGenerator {
 
 		}
 
+	}
+	
+	private static void sentenceCreator(int iterations)
+	{
+		for (int i = 0; i < iterations; i++)
+			System.out.println(nonTerminals.get("<Start>").toString());
 	}
 
 }
