@@ -40,14 +40,22 @@ public class Terminal
 	 */
     public String getString()
     {
-        if (referencedNT == null) //base case. 
-        	return words; //If there is no nonterminal following a terminal, there will be no continuation
+        if (referencedNT == null) //base case.
+        {
+        	if (words == null)
+        		return "";
+    		return words; //If there is no nonterminal following a terminal, there will be no continuation
+        }
 
     	String total = words + referencedNT.getString(); //otherwise, get the terminal and its following non-terminal
-    	for (int i = 0; i < continuations.size(); i++) //add any continuations
+    	if (continuations.size() > 0)
     	{
-    		total = total + continuations.get(i).getString();
+    		for (int i = 0; i < continuations.size(); i++) //add any continuations
+        	{
+        		total = total + continuations.get(i).getString();
+        	}
     	}
+    	
     	return total;
     }
 	

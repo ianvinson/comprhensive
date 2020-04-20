@@ -32,7 +32,7 @@ public class NonTerminal
      */
     public String getString ()
     {
-        int randomIndex = rng.nextInt(terminals.size() + 1);
+        int randomIndex = rng.nextInt(terminals.size());
         return terminals.get(randomIndex).getString();
     }
     
@@ -53,8 +53,7 @@ public class NonTerminal
     
     public String getTag ()
     {
-        int randomIndex = rng.nextInt(terminals.size() + 1);
-        return terminals.get(randomIndex).getString();
+        return tag;
     }
 
 }

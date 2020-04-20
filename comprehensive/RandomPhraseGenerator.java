@@ -8,17 +8,17 @@ import java.util.Scanner;
 
 public class RandomPhraseGenerator {
 
-	private static Hashtable<String, NonTerminal> nonTerminals;
+	private static Hashtable<String, NonTerminal> nonTerminals = new Hashtable<String, NonTerminal>();
 
 	private static boolean inDefinition;
-
-	private static boolean inTerminal;
 
 	private static int iterations;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		iterations = Integer.parseInt(args[1]);
-		parseFile(args[0]);
+		//iterations = Integer.parseInt(args[1]);
+		//parseFile(args[0]);
+		iterations = 100000;
+		parseFile("src/comprehensive/poetic_sentence.g");
 		sentenceCreator(iterations);
 	}
 
@@ -27,17 +27,27 @@ public class RandomPhraseGenerator {
 		Scanner scn = new Scanner(file);
 		String currTag = null;
 
-		while (scn.hasNextLine()) {
+		while (scn.hasNextLine()) 
+		{
 			String curr = scn.nextLine();
+			
+			if (curr.contentEquals("")) //if the line is empty then ignore it
+			{
+				continue;
+			}
+			
 			if (curr.charAt(0) == '{') {
 				inDefinition = true;
 				String line = scn.nextLine();
 				currTag = line;
-				nonTerminals.put(currTag, new NonTerminal(currTag));
+				if (!nonTerminals.containsKey(currTag.toString())) // Check if hashmap contains the tag, add it if it does not
+				{
+					nonTerminals.put(currTag, new NonTerminal(currTag));
+				}
 				curr = scn.nextLine();
 			}
 			
-			if (curr.charAt(0) == '}') {
+			else if (curr.charAt(0) == '}') {
 				inDefinition = false;
 			}
 			
@@ -50,7 +60,6 @@ public class RandomPhraseGenerator {
 				{
 					if (curr.charAt(i) == '<') // if nonTerminal is encountered
 					{
-						inTerminal = true;
 						StringBuilder tag = new StringBuilder();
 
 						if (original == null) // Check original terminal and assign if it's the first terminal
@@ -72,7 +81,7 @@ public class RandomPhraseGenerator {
 							i++;
 						}
 						tag.append(">"); //TODO Make sure that this increments to the correct spot
-						i++;
+						
 						if (!nonTerminals.containsKey(tag.toString())) // Check if hashmap contains the tag, add it if it does not
 						{
 							nonTerminals.put(tag.toString(), new NonTerminal(tag.toString()));
@@ -81,7 +90,6 @@ public class RandomPhraseGenerator {
 						currentTerminal.setReferencedNonT(nonTerminals.get(tag.toString())); //set the Terminal's reference
 
 						created = new StringBuilder(); //clear the stringbuilder for the next terminal
-						inTerminal = false;
 					}
 
 					if (curr.charAt(i) != '<' && curr.charAt(i) != '>') // TODO Not sure if we need the conditional
@@ -112,7 +120,7 @@ public class RandomPhraseGenerator {
 	private static void sentenceCreator(int iterations)
 	{
 		for (int i = 0; i < iterations; i++)
-			System.out.println(nonTerminals.get("<Start>").toString());
+			System.out.println(nonTerminals.get("<start>").getString());
 	}
 
 }
